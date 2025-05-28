@@ -22,12 +22,12 @@ app.post('/login', (req, res) => {
 
 app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
-  console.log('Recebido:', { to, subject, text });
-  console.log('ENV:', {
-    EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASS: process.env.EMAIL_PASS,
-    EMAIL_FROM: process.env.EMAIL_FROM,
-  });
+  // console.log('Recebido:', { to, subject, text });
+  // console.log('ENV:', {
+  //   EMAIL_USER: process.env.EMAIL_USER,
+  //   EMAIL_PASS: process.env.EMAIL_PASS,
+  //   EMAIL_FROM: process.env.EMAIL_FROM,
+  // });
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -49,5 +49,3 @@ app.post('/send-email', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
-
-
