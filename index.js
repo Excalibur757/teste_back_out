@@ -22,6 +22,12 @@ app.post('/login', (req, res) => {
 
 app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
+  console.log('Recebido:', { to, subject, text });
+  console.log('ENV:', {
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASS: process.env.EMAIL_PASS,
+    EMAIL_FROM: process.env.EMAIL_FROM,
+  });
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -35,9 +41,11 @@ app.post('/send-email', async (req, res) => {
     await transporter.sendMail({ from: process.env.EMAIL_FROM, to, subject, text });
     res.json({ success: true, message: 'E-mail enviado!' });
   } catch (error) {
+    console.error('Erro ao enviar:', error);
     res.status(500).json({ success: false, message: 'Erro ao enviar e-mail', error: error.message });
   }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
