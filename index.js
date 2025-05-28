@@ -38,7 +38,7 @@ app.post('/send-email', async (req, res) => {
   });
 
   try {
-    await transporter.sendMail({ from: process.env.EMAIL_FROM, to, subject, text });
+    await transporter.sendMail({ from: process.env.EMAIL_USER, to, subject, text });
     res.json({ success: true, message: 'E-mail enviado!' });
   } catch (error) {
     console.error('Erro ao enviar:', error);
