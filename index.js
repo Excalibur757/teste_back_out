@@ -7,6 +7,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,  // Coloque a URL do Railway aqui
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 app.get('/', (req, res) => {
   res.send('API funcionando!');
 });
@@ -43,6 +52,35 @@ app.post('/send-email', async (req, res) => {
   } catch (error) {
     console.error('Erro ao enviar:', error);
     res.status(500).json({ success: false, message: 'Erro ao enviar e-mail', error: error.message });
+  }
+});
+
+app.get('/posts', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM posts ORDER BY criado_em DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Erro ao listar posts:', err);
+    res.status(500).json({ success: false, message: 'Erro ao listar posts' });
+  }
+});
+
+app.post('/posts', async (req, res) => {
+  const { titulo, conteudo } = req.body;
+
+  if (!titulo || !conteudo) {
+    return res.status(400).json({ success: false, message: 'Título e conteúdo são obrigatórios.' });
+  }
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO posts (titulo, conteudo) VALUES ($1, $2) RETURNING *',
+      [titulo, conteudo]
+    );
+    res.json({ success: true, message: 'Post criado!', post: result.rows[0] });
+  } catch (err) {
+    console.error('Erro ao criar post:', err);
+    res.status(500).json({ success: false, message: 'Erro ao criar post' });
   }
 });
 
