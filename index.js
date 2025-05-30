@@ -56,9 +56,9 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
-app.get('/posts', async (req, res) => {
+app.get('/posts2', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM posts ORDER BY criado_em DESC');
+    const result = await pool.query('SELECT * FROM posts2 ORDER BY criado_em DESC');
     res.json(result.rows);
   } catch (err) {
     console.error('Erro ao listar posts:', err);
@@ -66,7 +66,7 @@ app.get('/posts', async (req, res) => {
   }
 });
 
-app.post('/posts', async (req, res) => {
+app.post('/posts2', async (req, res) => {
   const { titulo, conteudo } = req.body;
 
   if (!titulo || !conteudo) {
@@ -75,7 +75,7 @@ app.post('/posts', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO posts (titulo, conteudo) VALUES ($1, $2) RETURNING *',
+      'INSERT INTO posts2 (titulo, conteudo) VALUES ($1, $2) RETURNING *',
       [titulo, conteudo]
     );
     res.json({ success: true, message: 'Post criado!', post: result.rows[0] });
