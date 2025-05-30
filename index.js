@@ -15,6 +15,7 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
+console.log('Conectando no banco com:', process.env.DATABASE_URL);
 
 app.get('/', (req, res) => {
   res.send('API funcionando!');
@@ -87,3 +88,5 @@ app.post('/posts', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+console.log('Conectando no banco com:', process.env.DATABASE_URL);
+
