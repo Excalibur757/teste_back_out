@@ -75,9 +75,9 @@ app.post('/posts2', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO posts2 (titulo, conteudo) VALUES ($1, $2) RETURNING *',
+      'INSERT INTO posts2 (titulo, conteudo, criado_em) VALUES ($1, $2, NOW()) RETURNING *',
       [titulo, conteudo]
-    );
+    );    
     res.json({ success: true, message: 'Post criado!', post: result.rows[0] });
   } catch (err) {
     console.error('Erro ao criar post:', err);
