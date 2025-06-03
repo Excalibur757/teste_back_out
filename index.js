@@ -10,7 +10,7 @@ app.use(express.json());
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,  // Coloque a URL do Railway aqui
+  connectionString: process.env.DATABASE_URL, 
   ssl: {
     rejectUnauthorized: false
   }
@@ -32,12 +32,6 @@ app.post('/login', (req, res) => {
 
 app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
-  // console.log('Recebido:', { to, subject, text });
-  // console.log('ENV:', {
-  //   EMAIL_USER: process.env.EMAIL_USER,
-  //   EMAIL_PASS: process.env.EMAIL_PASS,
-  //   EMAIL_FROM: process.env.EMAIL_FROM,
-  // });
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -48,7 +42,12 @@ app.post('/send-email', async (req, res) => {
   });
 
   try {
-    await transporter.sendMail({ from: process.env.EMAIL_USER, to, subject, text });
+    await transporter.sendMail({ 
+      from: process.env.EMAIL_FROM,  // ✅ sempre usa EMAIL_FROM
+      to, 
+      subject, 
+      text 
+    });
     res.json({ success: true, message: 'E-mail enviado!' });
   } catch (error) {
     console.error('Erro ao enviar:', error);
