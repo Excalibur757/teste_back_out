@@ -31,7 +31,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/send-email', async (req, res) => {
-  const { to, subject, text } = req.body;
+  const { nome, email, telefone, mensagem } = req.body;
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -41,19 +41,22 @@ app.post('/send-email', async (req, res) => {
     }
   });
 
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_FROM,
+    subject: `Novo contato de ${nome}`,
+    text: `Nome: ${nome}\nEmail: ${email}\nTelefone: ${telefone}\nMensagem: ${mensagem}`
+  };
+
   try {
-    await transporter.sendMail({ 
-      from: process.env.EMAIL_FROM,  // ✅ sempre usa EMAIL_FROM
-      to, 
-      subject, 
-      text 
-    });
-    res.json({ success: true, message: 'E-mail enviado!' });
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'E-mail enviado com sucesso!' });
   } catch (error) {
     console.error('Erro ao enviar:', error);
     res.status(500).json({ success: false, message: 'Erro ao enviar e-mail', error: error.message });
   }
 });
+
 
 app.get('/posts2', async (req, res) => {
   try {
